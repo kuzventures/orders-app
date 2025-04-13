@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      // "@monorepo/icons": ["libs/icons/src/index.ts"],
-      "@monorepo/types": ["libs/types/src/index.ts"],
+      // "@orders-app/icons": ["libs/icons/src/index.ts"],
+      "@orders-app/types": ["libs/types/src/index.ts"],
     },
     "allowSyntheticDefaultImports": true,
     "jsx": "react"

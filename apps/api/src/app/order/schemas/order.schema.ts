@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { OrderStatus } from '@orders-app/types'; // adjust the path to match your libs
+import { OrderStatus } from '@orders-app/types';
 
 export type OrderDocument = Order & Document;
 
