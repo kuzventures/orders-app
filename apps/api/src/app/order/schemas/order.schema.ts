@@ -1,6 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { OrderStatus } from '@orders-app/types';
+import {
+  OrderProduct,
+  GeoLocation,
+  Address,
+  OrderStatus,
+} from '@orders-app/types'; 
 
 export type OrderDocument = Order & Document;
 
@@ -11,53 +16,30 @@ export class Order {
 
   @Prop({
     required: true,
-    type: [
-      {
-        title: { type: String },
-        price: { type: Number },
-        quantity: { type: Number },
-      },
-    ],
+    type: [Object],
   })
-  products: {
-    title: string;
-    price: number;
-    quantity: number;
-  }[];
+  products: OrderProduct[];
 
   @Prop({ required: true })
   totalAmount: number;
 
-  @Prop({ required: true, enum: Object.values(OrderStatus) })
+  @Prop({
+    required: true,
+    enum: Object.values(OrderStatus),
+  })
   status: OrderStatus;
 
   @Prop({
     required: true,
-    type: {
-      street: String,
-      city: String,
-      postalCode: String,
-      country: String,
-    },
+    type: Object,
   })
-  deliveryAddress: {
-    street: string;
-    city: string;
-    postalCode: string;
-    country: string;
-  };
+  deliveryAddress: Address;
 
   @Prop({
     required: true,
-    type: {
-      lat: Number,
-      lng: Number,
-    },
+    type: Object,
   })
-  location: {
-    lat: number;
-    lng: number;
-  };
+  location: GeoLocation;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

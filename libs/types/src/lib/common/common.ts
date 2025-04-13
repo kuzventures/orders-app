@@ -3,3 +3,7 @@ export interface GeoLocation {
     longitude: number;
   }
   
+  export enum DefaultResponse {
+    Success = 'Success',
+    Error = 'Error',
+  }
