@@ -1,0 +1,147 @@
+{
+    "root": true,
+    "ignorePatterns": ["**/*", "package.json"],
+    "plugins": ["@nx", "jsdoc", "import", "prettier", "json", "mdx"],
+    "extends": [
+      "eslint:recommended",
+      "plugin:json/recommended-legacy",
+      // "plugin:import/recommended",
+      // the following lines do the trick
+      "plugin:import/typescript",
+      "plugin:prettier/recommended",
+      // "plugin:jsdoc/recommended",
+      "plugin:mdx/recommended"
+    ],
+    "rules": {
+      // turn on errors for missing imports
+      "import/no-unresolved": 0,
+      "import/extensions": 1,
+      "import/named": 1,
+      "import/namespace": 1,
+      "import/default": 1,
+      "import/export": 1,
+      "prettier/prettier": [
+        "error",
+        {
+          "trailingComma": "all"
+        }
+      ],
+      "jsdoc/require-param": [
+        "warn",
+        {
+          "contexts": ["TSParameterProperty"]
+        }
+      ],
+      "jsdoc/require-param-description": [
+        "warn",
+        {
+          "contexts": ["TSParameterProperty"]
+        }
+      ],
+      "jsdoc/require-param-name": [
+        "warn",
+        {
+          "contexts": ["TSParameterProperty"]
+        }
+      ],
+      "jsdoc/require-returns": [
+        "warn",
+        {
+          "contexts": ["TSPropertySignature"]
+        }
+      ],
+      "jsdoc/require-returns-description": [
+        "warn",
+        {
+          "contexts": ["TSPropertySignature"]
+        }
+      ],
+      "jsdoc/require-returns-type": [
+        "warn",
+        {
+          "contexts": ["TSPropertySignature"]
+        }
+      ],
+      "jsdoc/require-description": [
+        "warn",
+        {
+          "contexts": ["TSPropertySignature"]
+        }
+      ]
+    },
+    "settings": {
+      "import/resolver": {
+        // You will also need to install and configure the TypeScript resolver
+        // See also https://github.com/import-js/eslint-import-resolver-typescript#configuration
+        // "typescript": true,
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        },
+        "typescript": {
+          "extensions": [".ts", ".tsx"],
+          "alwaysTryTypes": true,
+          // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+  
+          // Choose from one of the "project" configs below or omit to use <root>/tsconfig.json by default
+  
+          // use <root>/path/to/folder/tsconfig.json
+          "project": ["./apps/hub/tsconfig.json"]
+        }
+      },
+      "import/parsers": {
+        "@typescript-eslint/parser": [".ts", ".tsx"]
+      }
+    },
+    "overrides": [
+      {
+        "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+        "rules": {
+          "@nx/enforce-module-boundaries": [
+            "error",
+            {
+              "enforceBuildableLibDependency": false,
+              "allow": [],
+              "depConstraints": [
+                {
+                  "sourceTag": "*",
+                  "onlyDependOnLibsWithTags": ["*"]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "files": ["*.ts", "*.tsx"],
+        "extends": ["plugin:@nx/typescript"],
+        "rules": {
+          "@typescript-eslint/no-explicit-any": "off",
+          "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+              "argsIgnorePattern": "^_",
+              "varsIgnorePattern": "^_"
+            }
+          ],
+          "no-useless-escape": "off"
+        }
+      },
+      {
+        "files": ["*.js", "*.jsx"],
+        "extends": ["plugin:@nx/javascript"],
+        "rules": {}
+      },
+      {
+        "files": ["*.js", "*.jsx"],
+        "extends": ["plugin:@nx/javascript"],
+        "rules": {}
+      },
+      {
+        "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+        "env": {
+          "jest": true
+        },
+        "rules": {}
+      }
+    ]
+  }
