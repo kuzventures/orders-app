@@ -1,45 +1,46 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import {
-  OrderProduct,
-  GeoLocation,
-  Address,
-  OrderStatus,
-} from '@orders-app/types'; 
+import { OrderStatus, Order as OrderInterface } from '@orders-app/types';
+import { BaseDocument } from '../../common/base/base.schema';
+import { Address, AddressSchema } from '../../common/schemas/address.schema';
+import { OrderProduct, OrderProductSchema } from './order-product.schema';
 
-export type OrderDocument = Order & Document;
+export type OrderDocument = OrderInterface & Document & BaseDocument;
 
-@Schema({ timestamps: true })
-export class Order {
+@Schema({ versionKey: false, timestamps: true })
+export class Order extends BaseDocument {
   @Prop({ required: true })
   userId: string;
 
-  @Prop({
-    required: true,
-    type: [Object],
-  })
+  @Prop({ type: [OrderProductSchema], required: true })
   products: OrderProduct[];
 
   @Prop({ required: true })
   totalAmount: number;
 
   @Prop({
-    required: true,
+    type: String,
     enum: Object.values(OrderStatus),
+    default: OrderStatus.RECEIVED,
   })
   status: OrderStatus;
 
-  @Prop({
-    required: true,
-    type: Object,
-  })
+  @Prop({ type: AddressSchema, required: true })
   deliveryAddress: Address;
-
-  @Prop({
-    required: true,
-    type: Object,
-  })
-  location: GeoLocation;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
+
+// Add virtual for id
+OrderSchema.virtual('id').get(function() {
+  return this._id.toString();
+});
+
+// Ensure virtuals are included when converting to JSON
+OrderSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    return ret;
+  }
+});

@@ -2,4 +2,5 @@
 /dist
 /coverage
 /.nx/cache
-/.nx/workspace-data
+helm-chart
+docker-compose.yml

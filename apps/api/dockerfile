@@ -1,0 +1,41 @@
+FROM node:20-alpine as build
+
+WORKDIR /app
+
+# Copy package.json and related files
+COPY package.json package-lock.json nx.json ./
+COPY tsconfig.base.json ./
+
+# Copy library files
+COPY libs ./libs
+
+# Copy the API app
+COPY apps/api ./apps/api
+
+# Install dependencies
+RUN npm ci
+
+# Build the API application
+RUN npx nx build api
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files for production dependencies
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+# Copy built app from build stage
+COPY --from=build /app/dist/apps/api ./dist
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Expose the API port
+EXPOSE 3000
+
+# Start the application
+CMD ["node", "dist/main.js"]

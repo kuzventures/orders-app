@@ -5,11 +5,12 @@ import {
     Patch,
     Body,
     Res,
+    Query
   } from '@nestjs/common';
   import { Response } from 'express';
   import { OrderService } from './order.service';
   import { CreateOrderDto, UpdateOrderStatusDto } from '@orders-app/types';
-  import { BaseController } from '../common/base.controller';
+  import { BaseController } from '../common/base/base.controller';
   
   @Controller('orders')
   export class OrderController extends BaseController {
@@ -29,28 +30,36 @@ import {
     }
   
     @Get()
-    async findAll(@Res() res: Response) {
+    async findAll(
+      @Query('page') page = 1,
+      @Query('limit') limit = 10,
+      @Res() res: Response
+    ) {
       try {
-        const orders = await this.orderService.findAll();
-        return this.handleOkRequest(res, orders);
+        const { orders, total } = await this.orderService.findAll(+page, +limit);
+        return this.handleOkRequest(res, { orders, total, page: +page, limit: +limit });
       } catch (error) {
         this.logger.error('Fetch Orders Failed', error.stack || error);
-        return this.handleBadRequest(res, 'Failed to fetch orders');
+        return this.handleServerError(res, error.message);
       }
     }
   
-    @Get('pending')
-    async findPending(@Res() res: Response) {
+    @Get('active')
+    async findActive(
+      @Query('page') page = 1,
+      @Query('limit') limit = 10,
+      @Res() res: Response
+    ) {
       try {
-        const orders = await this.orderService.findPending();
-        return this.handleOkRequest(res, orders);
+        const { orders, total } = await this.orderService.findActive(+page, +limit);
+        return this.handleOkRequest(res, { orders, total, page: +page, limit: +limit });
       } catch (error) {
-        this.logger.error('Fetch Pending Orders Failed', error.stack || error);
-        return this.handleBadRequest(res, 'Failed to fetch pending orders');
+        this.logger.error('Fetch Active Orders Failed', error.stack || error);
+        return this.handleServerError(res, error.message);
       }
     }
   
-    @Patch('status')
+    @Patch()
     async updateStatus(
       @Body() dto: UpdateOrderStatusDto,
       @Res() res: Response,

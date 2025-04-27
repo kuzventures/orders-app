@@ -15,8 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      // "@orders-app/icons": ["libs/icons/src/index.ts"],
-      "@orders-app/types": ["libs/types/src/index.ts"],
+      "@orders-app/types": ["libs/types/src"],
     },
     "allowSyntheticDefaultImports": true,
     "jsx": "react"

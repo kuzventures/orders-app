@@ -1,4 +1,6 @@
-export interface Product {
+import { BaseIdentifiers } from "../common";
+
+export interface Product extends BaseIdentifiers {
     id: string;
     name: string;
     description: string;
@@ -18,4 +20,7 @@ export interface Product {
     productId: string;
     quantity: number;
     price: number;
+    name: string; 
+    description: string;
+    type: ProductType;
   }

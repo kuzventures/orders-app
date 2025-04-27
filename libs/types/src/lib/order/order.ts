@@ -1,6 +1,6 @@
 import { OrderProduct } from '../product';
 import { Address } from '../user';
-import { GeoLocation } from '../common';
+import { BaseIdentifiers } from '../common';
 
 export enum OrderStatus {
     RECEIVED = 'Received',
@@ -10,15 +10,14 @@ export enum OrderStatus {
     DELIVERED = 'Delivered',
   }
 
-  export interface Order {
+  export interface Order extends BaseIdentifiers {
     id: string;
     userId: string;
     products: OrderProduct[];
     totalAmount: number;
     status: OrderStatus;
     deliveryAddress: Address;
-    location: GeoLocation;
-  }
+    }
 
   export interface CreateOrderDto {
     userId: string;
@@ -29,4 +28,11 @@ export enum OrderStatus {
   export interface UpdateOrderStatusDto {
     orderId: number;
     status: OrderStatus;
+  }
+
+  export interface OrdersResponse {
+    orders: Order[];
+    total: number;
+    page: number;
+    limit: number;
   }

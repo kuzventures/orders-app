@@ -1,16 +1,13 @@
-import { GeoLocation } from "../common";
+import { GeoLocation, BaseIdentifiers } from "../common";
 
-export interface User {
+export interface User extends BaseIdentifiers {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
   address: Address;
-  location?: GeoLocation;
   role: UserRole;
-  createdAt: Date;
-  updatedAt: Date;
   }
 
   export enum UserRole {
@@ -24,4 +21,5 @@ export interface User {
     city: string;
     zipCode: string;
     country: string;
+    geoLocation: GeoLocation;
   }

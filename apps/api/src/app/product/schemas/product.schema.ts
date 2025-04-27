@@ -1,9 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ProductType } from '@orders-app/types';
+import { BaseDocument } from '../../common/base/base.schema';
 
-@Schema({ timestamps: true })
-export class Product extends Document {
+export type ProductDocument = Product & Document & BaseDocument;
+
+@Schema({ versionKey: false, timestamps: true })
+export class Product extends BaseDocument {
   @Prop({ required: true })
   name: string;
 
@@ -22,12 +25,20 @@ export class Product extends Document {
     required: true,
   })
   type: ProductType;
-
-  @Prop({ default: Date.now })
-  createdAt: Date;
-
-  @Prop({ default: Date.now })
-  updatedAt: Date;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
+
+// Add virtual for id
+ProductSchema.virtual('id').get(function() {
+  return this._id.toString();
+});
+
+// Ensure virtuals are included when converting to JSON
+ProductSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    return ret;
+  }
+});

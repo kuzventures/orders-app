@@ -1,0 +1,29 @@
+{
+    "extends": "stylelint-config-standard-scss",
+    "plugins": ["stylelint-scss"],
+    "defaultSeverity": "warning",
+    "rules": {
+      "keyframes-name-pattern": null,
+      "custom-property-pattern": null,
+      "selector-class-pattern": null,
+      "scss/double-slash-comment-whitespace-inside": [
+        "always",
+        {
+          "ignore": ["inside"]
+        }
+      ],
+      "rule-empty-line-before": [
+        "always",
+        {
+          "except": ["first-nested"],
+          "ignore": ["after-comment"]
+        }
+      ],
+      "selector-pseudo-class-no-unknown": [
+        true,
+        {
+          "ignorePseudoClasses": ["global", "export"]
+        }
+      ]
+    }
+  }

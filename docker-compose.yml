@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:5
+    container_name: pizza-orders-mongodb
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=pizza-orders
+    networks:
+      - pizza-network
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: pizza-orders-api
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/pizza-orders
+      - PORT=3000
+      - HOST=0.0.0.0
+      - USE_IN_MEMORY_DB=false
+      - SEED_DB=true
+    ports:
+      - "3000:3000"
+    networks:
+      - pizza-network
+
+  client:
+    build:
+      context: .
+      dockerfile: apps/client/Dockerfile
+    container_name: pizza-orders-client
+    depends_on:
+      - api
+    ports:
+      - "4200:80"
+    networks:
+      - pizza-network
+
+networks:
+  pizza-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

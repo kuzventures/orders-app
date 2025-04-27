@@ -1,82 +1,133 @@
-# OrdersApp
+# Pizza Order Management System
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A full-stack application built to help pizza restaurants efficiently manage their orders. This system provides real-time updates, order tracking, and status management to streamline restaurant operations.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## 📋 Features
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+- **Order Management**: View, sort, filter, and update orders in real-time
+- **Status Tracking**: Monitor orders through their entire lifecycle (Received → Preparing → Ready → En Route → Delivered)
+- **Responsive Dashboard**: Clean interface with order statistics and detailed information
+- **Real-time Updates**: Changes reflect immediately across all connected devices
 
-## Finish your CI setup
+## 🔧 Tech Stack
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/HbpCAuoNvp)
+### Backend
+- **NestJS**: Modern, TypeScript-based Node.js framework
+- **MongoDB**: NoSQL database for flexible data storage
+- **Mongoose**: MongoDB object modeling for Node.js
+- **WebSockets**: Real-time bi-directional communication
+- **In-Memory MongoDB**: Efficient development and testing
 
+### Frontend
+- **React**: UI library for building the interface
+- **Ant Design**: UI component library for a polished look and feel
+- **React Query**: Data fetching and state management
+- **TypeScript**: Type safety and improved developer experience
 
-## Run tasks
+## 🚀 Getting Started
 
-To run the dev server for your app, use:
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+- Git
 
-```sh
-npx nx serve client
+### Installation
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/kuzventures/orders-app.git
+   cd orders-app
+   ```
+
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+
+3. Set up your environment variables
+
+   For the API (.env file in apps/api directory):
+   ```
+   # MongoDB Connection
+   MONGODB_URI=mongodb://localhost:27017/pizza-orders
+   USE_IN_MEMORY_DB=true  # Set to false to use real MongoDB
+
+   # Server Configuration
+   PORT=3000
+   HOST=localhost
+
+   # Enable database seeding with sample data
+   SEED_DB=true
+   ```
+
+   For the client (.env file in apps/client directory):
+   ```
+   # API Configuration
+   NX_API_URL=http://localhost:3000/api
+   NX_WEBSOCKET_URL=http://localhost:3000
+   NX_POLLING_INTERVAL=10000
+   ```
+
+4. Start the development servers
+   ```bash
+   # Start API
+   nx serve api
+   
+   # Start client (in a new terminal)
+   nx serve client
+   ```
+
+5. Open your browser to http://localhost:4200
+
+## 🧑‍💻 Development
+
+This project uses Nx as a build system and for managing the monorepo. 
+
+Some useful commands:
+```bash
+# Build the types library
+nx build types
+
+# Build the API
+nx build api
+
+# Build the client
+nx build client
+
+# Lint a project
+nx lint [project]
+
+# Run tests
+nx test [project]
 ```
 
-To create a production bundle:
+## 🧪 Testing
 
-```sh
-npx nx build client
+The project includes a built-in memory database for testing, which can be enabled by setting `USE_IN_MEMORY_DB=true` in your .env file. This will automatically seed the database with 300 sample orders.
+
+## 📝 Project Structure
+
+```
+apps/
+├── api/          # NestJS backend application
+├── client/       # React frontend application
+libs/
+├── types/        # Shared TypeScript interfaces and types
 ```
 
-To see all available targets to run for a project, run:
+## 📚 API Documentation
 
-```sh
-npx nx show project client
-```
+The API exposes the following endpoints:
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+- `GET /api/orders` - Get all orders (with pagination and filtering)
+- `GET /api/orders/active` - Get all active orders (not delivered)
+- `PATCH /api/orders/:id/status` - Update an order's status
+- `POST /api/orders` - Create a new order
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+WebSocket events:
+- `orderCreated` - Emitted when a new order is created
+- `orderUpdated` - Emitted when an order is updated
 
-## Add new projects
+## 📄 License
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/react:app demo
-```
-
-To generate a new library, use:
-
-```sh
-npx nx g @nx/react:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+This project is licensed under the MIT License - see the LICENSE file for details.
